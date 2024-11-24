@@ -80,11 +80,13 @@ const Home = () => {
     // Skeleton
 
     return (
-        <div className="min-h-screen ml-10 bg-white">
-            <header>
-                <h1 className="text-2xl font-bold flex items-center gap-2 py-4">
-                    <span className="text-xl">🍜</span> Munchies
-                </h1>
+        <div className="min-h-screen bg-white">
+            <header className="mb-10">
+                <img
+                    className=""
+                    src='logo_dark.svg'
+                    alt="icons"
+                />
             </header>
 
             <div className="flex">
