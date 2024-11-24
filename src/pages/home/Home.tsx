@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Card from "../../components/ui/Card";
+import { Categories } from '../../utils/data.ts';
 
 type Restaurant = {
     id: string;
@@ -10,6 +11,7 @@ type Restaurant = {
     delivery_time_minutes: number;
     price_range_id: string;
 };
+
 const Home = () => {
     const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -44,6 +46,8 @@ const Home = () => {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
+    // Skeleton
+
     return (
         <div className="min-h-screen bg-white">
             <header>
@@ -52,20 +56,50 @@ const Home = () => {
                 </h1>
             </header>
 
-            <div className="flex flex-wrap">
-                {restaurants && Array.isArray(restaurants) ? (
-                    restaurants.map((restaurant) => (
-                        <Card
-                            key={restaurant.id}
-                            name={restaurant.name}
-                            status={'open'}
-                            deliveryTime={restaurant.delivery_time_minutes}
-                            image={restaurant.image_url}
-                        />
-                    ))
-                ) : (
-                    <p>No restaurants available.</p>
-                )}
+            <div className="flex">
+                <aside className="bg-white border border-gray-200 rounded-lg w-64 hidden md:block">
+                    Filter
+                </aside>
+
+                <div className="flex-1">
+                    <div className="flex mb-2">
+                        {
+                            Categories.map((category) => (
+                                <div className="flex bg-white border border-gray-200 rounded-lg pt-2 pb-4 pl-2 mr-2 w-[160px] h-[80px]">
+                                    <div className="">
+                                        {category.name}
+                                    </div>
+                                    <img
+                                        className="ml-auto w-[80px] h-[80px]"
+                                        src={`${import.meta.env.VITE_BACKEND_BASE_URL}/images/${category.icon}`}
+                                        alt="icons"
+                                    />
+                                </div>
+                            ))
+                        }
+                    </div>
+
+                    <div className="mb-2">
+                        <h2>
+                            Restaurant's
+                        </h2>
+                    </div>
+                    <div className="flex flex-wrap">
+                        {restaurants && Array.isArray(restaurants) ? (
+                            restaurants.map((restaurant) => (
+                                <Card
+                                    key={restaurant.id}
+                                    name={restaurant.name}
+                                    status={'open'}
+                                    deliveryTime={restaurant.delivery_time_minutes}
+                                    image={restaurant.image_url}
+                                />
+                            ))
+                        ) : (
+                            <p>No restaurants available.</p>
+                        )}
+                    </div>
+                </div>
             </div>
         </div>
     );
