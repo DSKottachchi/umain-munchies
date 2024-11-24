@@ -12,36 +12,61 @@ type Restaurant = {
     price_range_id: string;
 };
 
+type Filter = {
+    id: string;
+    name: string;
+    image_url: string;
+};
+
 const Home = () => {
     const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+    const [filters, setFilters] = useState<Filter[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const fetchRestuarants = async () => {
-            try {
-                const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/restaurants`);
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.status}`);
-                }
-                const result = await response.json();
-                console.log(result)
-                setRestaurants(result.restaurants);
-                console.log(restaurants)
-
-            } catch (err) {
-                if (err instanceof Error) {
-                    setError(err.message);
-                } else {
-                    setError("An unexpected error occurred");
-                }
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchRestuarants();
+        fetchFilters();
     }, []);
+
+    const fetchRestuarants = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/restaurants`);
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+            const result = await response.json();
+            setRestaurants(result.restaurants);
+
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("An unexpected error occurred");
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchFilters = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/filter`);
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+            const result = await response.json();
+            setFilters(result.filters);
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("An unexpected error occurred");
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -49,7 +74,7 @@ const Home = () => {
     // Skeleton
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen ml-10 bg-white">
             <header>
                 <h1 className="text-2xl font-bold flex items-center gap-2 py-4">
                     <span className="text-xl">🍜</span> Munchies
@@ -57,21 +82,23 @@ const Home = () => {
             </header>
 
             <div className="flex">
-                <aside className="bg-white border border-gray-200 rounded-lg w-64 hidden md:block">
-                    Filter
+                <aside className="p-6 bg-white border border-gray-200 rounded-lg w-64 hidden md:block mr-4">
+                    <div className="mb-6">Filter</div>
+                    <div className="mb-6">Food Category</div>
+                    
                 </aside>
 
                 <div className="flex-1">
                     <div className="flex mb-2">
                         {
-                            Categories.map((category) => (
+                            filters.map((filter) => (
                                 <div className="flex bg-white border border-gray-200 rounded-lg pt-2 pb-4 pl-2 mr-2 w-[160px] h-[80px]">
-                                    <div className="">
-                                        {category.name}
+                                    <div className="text-sm font-medium text-gray-700">
+                                        {filter.name}
                                     </div>
                                     <img
-                                        className="ml-auto w-[80px] h-[80px]"
-                                        src={`${import.meta.env.VITE_BACKEND_BASE_URL}/images/${category.icon}`}
+                                        className="ml-auto w-[80px] h-[80px] object-contain"
+                                        src={`${import.meta.env.VITE_BACKEND_BASE_URL}${filter.image_url}`}
                                         alt="icons"
                                     />
                                 </div>
@@ -79,8 +106,8 @@ const Home = () => {
                         }
                     </div>
 
-                    <div className="mb-2">
-                        <h2>
+                    <div className="mt-4 mb-2">
+                        <h2 className="text-[2rem]">
                             Restaurant's
                         </h2>
                     </div>

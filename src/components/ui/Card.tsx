@@ -9,7 +9,7 @@ interface Card {
 
 const Card = ({ name, status, deliveryTime, image }: Card) => {
     return (
-        <div className="flex flex-col justify-between overflow-hidden w-[327px] h-[202px] p-4 bg-white border border-gray-200 rounded-lg transition-transform hover:scale-[1.02] dark:bg-gray-800 dark:border-gray-700">
+        <div className="flex flex-col justify-between overflow-hidden mr-6 mb-4 w-[327px] h-[202px] p-4 bg-white border border-gray-200 rounded-lg transition-transform hover:scale-[1.02] dark:bg-gray-800 dark:border-gray-700">
             <div className="flex relative">
                 <Chip label={status} color="" />
                 {status == 'open' && (
@@ -19,7 +19,7 @@ const Card = ({ name, status, deliveryTime, image }: Card) => {
                 <div className="absolute -top-12 -right-12">
                     <img
                         src={`${import.meta.env.VITE_BACKEND_BASE_URL}${image}`}
-                        alt="Decoration"
+                        alt="icon"
                         className="w-[140px] h-[140px]"
                     />
                 </div>
