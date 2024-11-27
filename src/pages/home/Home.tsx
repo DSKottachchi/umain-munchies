@@ -47,7 +47,7 @@ const Home = () => {
                         return { ...restaurant, is_open };
                     } catch (error) {
                         console.error(`Failed to fetch open status for ${restaurant.id}:`, error);
-                        return { ...restaurant, is_open: "unknown" };
+                        return { ...restaurant, is_open: false };
                     }
                 })
             );
@@ -111,7 +111,11 @@ const Home = () => {
             );
         }
 
-        setFilteredRestaurants(filtered);
+
+        if (JSON.stringify(filtered) !== JSON.stringify(filteredRestaurants)) {
+            setFilteredRestaurants(filtered);
+        }
+        // setFilteredRestaurants(filtered);
     };
 
     const toggleFilter = (filterId: string) => {

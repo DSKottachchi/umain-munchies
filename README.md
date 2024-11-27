@@ -35,8 +35,7 @@ npm install
 npm run dev
 ```
 
-URL: https://umain-munchies-eta.vercel.app
-
+URL: https://umain-munchies-xi.vercel.app
 
 ### TODO
 
