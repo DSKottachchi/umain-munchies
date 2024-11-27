@@ -36,4 +36,14 @@ npm install
 npm run dev
 ```
 
-URL: https://natural-cycles-profile-manager-534w.vercel.app
+URL: https://umain-munchies-eta.vercel.app
+
+
+### TODO
+
+- [ ] Shift the sidebar into another component
+- [ ] Add the test cases
+- [ ] Loading Skeleton
+- [ ] Smoother image loader
+- [ ] Home Page
+- [ ] API hook
