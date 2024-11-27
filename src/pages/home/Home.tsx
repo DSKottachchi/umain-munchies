@@ -32,49 +32,38 @@ const Home = () => {
             }
             const result = await response.json();
             setRestaurants(result.restaurants);
-    
-            // Fetch the open status for each restaurant using `result.restaurants` directly
+
             const restaurantsWithStatus = await Promise.all(
                 result.restaurants.map(async (restaurant: Restaurant) => {
                     try {
-                        console.log("id", restaurant);
-    
                         const statusResponse = await fetch(
                             `${import.meta.env.VITE_BACKEND_BASE_URL}/api/open/${restaurant.id}`
                         );
-    
-                        console.log("statusResponse", statusResponse);
-    
+
                         if (!statusResponse.ok) {
                             throw new Error(`Error fetching status for restaurant ID ${restaurant.id}`);
                         }
                         const { is_open } = await statusResponse.json();
-                        return { ...restaurant, is_open }; // Add open_status to restaurant object
+                        return { ...restaurant, is_open };
                     } catch (error) {
                         console.error(`Failed to fetch open status for ${restaurant.id}:`, error);
-                        return { ...restaurant, is_open: "unknown" }; // Handle error gracefully
+                        return { ...restaurant, is_open: "unknown" };
                     }
                 })
             );
-    
-            console.log("restaurantsWithStatus", restaurantsWithStatus);
-    
-            // Extract unique delivery times
             const uniqueTimes = Array.from(
                 new Set<number>(
                     result.restaurants.map((restaurant: Restaurant) => restaurant.delivery_time_minutes)
                 )
             ).sort((a, b) => a - b);
             setDeliveryTimes(uniqueTimes);
-    
-            setFilteredRestaurants(restaurantsWithStatus); // Update filtered restaurants with status
+            setFilteredRestaurants(restaurantsWithStatus);
         } catch (err) {
             setError(err instanceof Error ? err.message : "An unexpected error occurred");
         } finally {
             setLoading(false);
         }
     };
-    
 
     const fetchFilters = async () => {
         try {
@@ -104,22 +93,18 @@ const Home = () => {
 
     const applyFilters = () => {
         let filtered = restaurants;
-
-        // Apply filter by categories
         if (selectedFilters.length > 0) {
             filtered = filtered.filter((restaurant) =>
                 restaurant.filter_ids.some((filterId) => selectedFilters.includes(filterId))
             );
         }
 
-        // Apply filter by price range
         if (selectedPriceRanges.length > 0) {
             filtered = filtered.filter((restaurant) =>
                 selectedPriceRanges.includes(restaurant.price_range_id)
             );
         }
 
-        // Apply filter by delivery time
         if (selectedDeliveryTimes.length > 0) {
             filtered = filtered.filter((restaurant) =>
                 selectedDeliveryTimes.includes(restaurant.delivery_time_minutes)
@@ -132,24 +117,24 @@ const Home = () => {
     const toggleFilter = (filterId: string) => {
         setSelectedFilters((prev) =>
             prev.includes(filterId)
-                ? prev.filter((id) => id !== filterId) // Remove if already selected
-                : [...prev, filterId] // Add if not selected
+                ? prev.filter((id) => id !== filterId)
+                : [...prev, filterId]
         );
     };
 
     const togglePriceRange = (priceRangeId: string) => {
         setSelectedPriceRanges((prev) =>
             prev.includes(priceRangeId)
-                ? prev.filter((id) => id !== priceRangeId) // Remove if already selected
-                : [...prev, priceRangeId] // Add if not selected
+                ? prev.filter((id) => id !== priceRangeId)
+                : [...prev, priceRangeId]
         );
     };
 
     const toggleDeliveryTime = (deliveryTime: number) => {
         setSelectedDeliveryTimes((prevSelected) =>
             prevSelected.includes(deliveryTime)
-                ? prevSelected.filter((time) => time !== deliveryTime) // Deselect
-                : [...prevSelected, deliveryTime] // Select
+                ? prevSelected.filter((time) => time !== deliveryTime)
+                : [...prevSelected, deliveryTime]
         );
     };
 
@@ -163,21 +148,21 @@ const Home = () => {
     if (error) return <p>Error: {error}</p>;
 
     return (
-        <div className="min-h-screen bg-white">
-            <header className="mb-10">
-                <img className="" src="logo_dark.svg" alt="icons" />
+        <div className="py-10 px-4 sm:px-10">
+            <header className="mb-10 flex justify-center sm:justify-start">
+                <img className="w-32 sm:w-auto" src="logo_dark.svg" alt="icons" />
             </header>
 
             {!loading ? (
-                <div className="flex">
-                    <aside className="p-6 bg-white border border-gray-200 rounded-lg w-64 hidden md:block mr-4">
-                        <div className="mb-6">Filter</div>
-                        <div className="mb-6 uppercase text-slate-300">Food Category</div>
+                <div className="flex flex-col md:flex-row">
+                    <aside className="p-6 bg-white border h-auto md:h-[764px] border-stroke rounded-lg w-full md:w-64 hidden md:block md:mr-4">
+                        <div className="mb-6 text-lg">Filter</div>
+                        <div className="mb-6 text-xs uppercase text-stroke">Food Category</div>
                         <div className="mb-4">
                             {filters.map((filter) => (
                                 <button
                                     key={filter.id}
-                                    className={`inline-flex items-center w-fit h-fit p-2 mr-2 mb-2 gap-2 rounded-[8px] border-[0.6px] ${selectedFilters.includes(filter.id) ? "bg-gray-300" : ""
+                                    className={`inline-flex items-center w-fit h-fit p-2 mr-2 mb-2 gap-2 rounded-[8px] border border-stroke ${selectedFilters.includes(filter.id) ? "bg-offwhite" : ""
                                         }`}
                                     onClick={() => toggleFilter(filter.id)}
                                 >
@@ -186,13 +171,12 @@ const Home = () => {
                             ))}
                         </div>
 
-                        {/* Delivery Time */}
-                        <div className="mb-6 uppercase text-slate-300">Delivery Time</div>
+                        <div className="mb-6 text-xs uppercase text-stroke">Delivery Time</div>
                         <div className="mb-4">
                             {deliveryTimes.map((deliveryTime) => (
                                 <button
                                     key={deliveryTime}
-                                    className={`inline-flex items-center w-fit h-fit p-2 mr-2 mb-2 gap-2 rounded-[8px] border-[0.6px] ${selectedDeliveryTimes.includes(deliveryTime) ? "bg-gray-300" : ""}`}
+                                    className={`inline-flex items-center w-fit h-fit p-2 mr-2 mb-2 gap-2 rounded-[8px] border border-stroke ${selectedDeliveryTimes.includes(deliveryTime) ? "bg-offwhite" : ""}`}
                                     onClick={() => toggleDeliveryTime(deliveryTime)}
                                 >
                                     <span className="text-sm font-medium text-gray-800">{deliveryTime} mins</span>
@@ -200,12 +184,12 @@ const Home = () => {
                             ))}
                         </div>
 
-                        <div className="mb-6 uppercase text-slate-300">Price Range</div>
+                        <div className="mb-6 text-xs uppercase text-stroke">Price Range</div>
                         <div className="mb-4">
                             {priceRanges.map((priceRange) => (
                                 <button
                                     key={priceRange.id}
-                                    className={`inline-flex items-center w-fit h-fit p-2 mr-2 mb-2 gap-2 rounded-[8px] border-[0.6px] ${selectedPriceRanges.includes(priceRange.id) ? "bg-gray-300" : ""
+                                    className={`inline-flex items-center w-fit h-fit p-2 mr-2 mb-2 gap-2 rounded-[8px] border border-stroke ${selectedPriceRanges.includes(priceRange.id) ? "bg-offwhite" : ""
                                         }`}
                                     onClick={() => togglePriceRange(priceRange.id)}
                                 >
@@ -216,29 +200,28 @@ const Home = () => {
                     </aside>
 
                     <div className="flex-1">
-                        <div className="flex mb-2">
-                            {
-                                filters.map((filter) => (
-                                    <button key={filter.id} onClick={() => toggleFilter(filter.id)} className={`flex border border-gray-200 rounded-lg pt-2 pb-4 pl-2 mr-2 w-[160px] h-[80px] ${selectedFilters.includes(filter.id) ? "bg-gray-300" : "bg-white"
-                                        }`}>
-                                        <div className="text-sm font-medium text-gray-700">
-                                            {filter.name}
-                                        </div>
-                                        <img
-                                            className="ml-auto w-[80px] h-[80px] object-contain"
-                                            src={`${import.meta.env.VITE_BACKEND_BASE_URL}${filter.image_url}`}
-                                            alt="icons"
-                                        />
-                                    </button>
-                                ))
-                            }
-
-                        </div>
-                        <div className="mt-4 mb-2">
-                            <h2 className="text-[2rem]">Restaurants</h2>
+                        <div className="flex justify-start mb-4 overflow-x-auto space-x-2">
+                            {filters.map((filter) => (
+                                <button
+                                    key={filter.id}
+                                    onClick={() => toggleFilter(filter.id)}
+                                    className={`flex border border-stroke rounded-lg pt-2 pb-4 pl-2 w-[160px] h-[80px] flex-shrink-0 ${selectedFilters.includes(filter.id) ? "bg-offwhite" : "bg-white"}`}
+                                >
+                                    <div className="text-sm">{filter.name}</div>
+                                    <img
+                                        className="ml-auto w-[80px] h-[80px] object-contain"
+                                        src={`${import.meta.env.VITE_BACKEND_BASE_URL}${filter.image_url}`}
+                                        alt="icons"
+                                    />
+                                </button>
+                            ))}
                         </div>
 
-                        <div className="flex flex-wrap">
+                        <div className="my-14">
+                            <h2 className="text-xl">Restaurants</h2>
+                        </div>
+
+                        <div className="flex flex-wrap overflow-y-auto max-h-[calc(100vh-200px)] md:max-h-screen">
                             {filteredRestaurants.length > 0 ? (
                                 filteredRestaurants.map((restaurant) => (
                                     <Card
@@ -256,7 +239,9 @@ const Home = () => {
                     </div>
                 </div>
             ) : (
-                <Loader />
+                <div className="flex items-center justify-center h-[calc(100vh-20px)]">
+                    <Loader />
+                </div>
             )}
         </div>
     );
