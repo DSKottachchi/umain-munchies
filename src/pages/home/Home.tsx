@@ -41,7 +41,7 @@ const Home = () => {
                         );
 
                         if (!statusResponse.ok) {
-                            throw new Error(`Error fetching status for restaurant ID ${restaurant.id}`);
+                            throw new Error(`Error fetching status for restaurant ${restaurant.id}`);
                         }
                         const { is_open } = await statusResponse.json();
                         return { ...restaurant, is_open };
@@ -148,21 +148,21 @@ const Home = () => {
     if (error) return <p>Error: {error}</p>;
 
     return (
-        <div className="py-10 px-4 sm:px-10">
-            <header className="mb-10 flex justify-center sm:justify-start">
+        <div className="container mx-auto p-4">
+            <header className="mb-10 flex">
                 <img className="w-32 sm:w-auto" src="logo_dark.svg" alt="icons" />
             </header>
 
             {!loading ? (
                 <div className="flex flex-col md:flex-row">
-                    <aside className="p-6 bg-white border h-auto md:h-[764px] border-stroke rounded-lg w-full md:w-64 hidden md:block md:mr-4">
+                    <aside className="p-6 bg-white border h-auto md:min-h-[764px] md:w-[239px] border-stroke rounded-lg hidden md:block md:mr-4">
                         <div className="mb-6 text-lg">Filter</div>
                         <div className="mb-6 text-xs uppercase text-stroke">Food Category</div>
                         <div className="mb-4">
                             {filters.map((filter) => (
                                 <button
                                     key={filter.id}
-                                    className={`inline-flex items-center w-fit h-fit p-2 mr-2 mb-2 gap-2 rounded-[8px] border border-stroke ${selectedFilters.includes(filter.id) ? "bg-offwhite" : ""
+                                    className={`inline-flex items-center w-fit h-fit p-2 mr-2 mb-2 gap-2 rounded-[8px] border border-stroke ${selectedFilters.includes(filter.id) ? "bg-[#b8b8b8]" : "bg-white"
                                         }`}
                                     onClick={() => toggleFilter(filter.id)}
                                 >
@@ -176,7 +176,7 @@ const Home = () => {
                             {deliveryTimes.map((deliveryTime) => (
                                 <button
                                     key={deliveryTime}
-                                    className={`inline-flex items-center w-fit h-fit p-2 mr-2 mb-2 gap-2 rounded-[8px] border border-stroke ${selectedDeliveryTimes.includes(deliveryTime) ? "bg-offwhite" : ""}`}
+                                    className={`inline-flex items-center w-fit h-fit p-2 mr-2 mb-2 gap-2 rounded-[8px] border border-stroke ${selectedDeliveryTimes.includes(deliveryTime) ? "bg-[#b8b8b8]" : "bg-white"}`}
                                     onClick={() => toggleDeliveryTime(deliveryTime)}
                                 >
                                     <span className="text-sm font-medium text-gray-800">{deliveryTime} mins</span>
@@ -189,7 +189,7 @@ const Home = () => {
                             {priceRanges.map((priceRange) => (
                                 <button
                                     key={priceRange.id}
-                                    className={`inline-flex items-center w-fit h-fit p-2 mr-2 mb-2 gap-2 rounded-[8px] border border-stroke ${selectedPriceRanges.includes(priceRange.id) ? "bg-offwhite" : ""
+                                    className={`inline-flex items-center w-fit h-fit p-2 mr-2 mb-2 gap-2 rounded-[8px] border border-stroke ${selectedPriceRanges.includes(priceRange.id) ? "bg-[#b8b8b8]" : "bg-white"
                                         }`}
                                     onClick={() => togglePriceRange(priceRange.id)}
                                 >
@@ -200,12 +200,28 @@ const Home = () => {
                     </aside>
 
                     <div className="flex-1">
+                        <div className="md:hidden">
+                            <div className="mb-6 text-xs uppercase text-stroke">Delivery Time</div>
+                            <div className="mb-4">
+                                {deliveryTimes.map((deliveryTime) => (
+                                    <button
+                                        key={deliveryTime}
+                                        className={`inline-flex items-center w-fit h-fit p-2 mr-2 mb-2 gap-2 rounded-[8px] border border-stroke ${selectedDeliveryTimes.includes(deliveryTime) ? "bg-[#b8b8b8]" : "bg-white"}`}
+                                        onClick={() => toggleDeliveryTime(deliveryTime)}
+                                    >
+                                        <span className="text-sm font-medium text-gray-800">{deliveryTime} mins</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+
                         <div className="flex justify-start mb-4 overflow-x-auto space-x-2">
                             {filters.map((filter) => (
                                 <button
                                     key={filter.id}
                                     onClick={() => toggleFilter(filter.id)}
-                                    className={`flex border border-stroke rounded-lg pt-2 pb-4 pl-2 w-[160px] h-[80px] flex-shrink-0 ${selectedFilters.includes(filter.id) ? "bg-offwhite" : "bg-white"}`}
+                                    className={`flex border border-stroke rounded-lg pt-2 pb-4 pl-2 w-[160px] h-[80px] flex-shrink-0 ${selectedFilters.includes(filter.id) ? "bg-[#b8b8b8]" : "bg-white"}`}
                                 >
                                     <div className="text-sm">{filter.name}</div>
                                     <img
@@ -217,8 +233,8 @@ const Home = () => {
                             ))}
                         </div>
 
-                        <div className="my-14">
-                            <h2 className="text-xl">Restaurants</h2>
+                        <div className="my-8 md:my-14">
+                            <h2 className="text-lg md:text-xl">Restaurants</h2>
                         </div>
 
                         <div className="flex flex-wrap overflow-y-auto max-h-[calc(100vh-200px)] md:max-h-screen">

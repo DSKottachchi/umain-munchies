@@ -9,7 +9,7 @@ interface Card {
 
 const Card = ({ name, status, deliveryTime, image }: Card) => {
     return (
-        <div className={`flex flex-col justify-between overflow-hidden bg-white mr-6 mb-4 w-[327px] h-[202px] p-4 ${!status ? 'opacity-50' : ''} border border-stroke rounded-lg transition-transform hover:scale-[1.02] cursor`}>
+        <div className={`flex flex-col justify-between overflow-hidden bg-white md:mr-6 mb-4 w-[100%] md:w-[327px] h-[202px] p-4 ${!status ? 'opacity-50' : ''} border border-stroke rounded-lg transition-transform hover:scale-[1.02] cursor`}>
             <div className="flex relative">
                 <Chip label={status ? 'open' : 'close'} color={true} />
                 {status && (
@@ -21,6 +21,7 @@ const Card = ({ name, status, deliveryTime, image }: Card) => {
                         src={`${import.meta.env.VITE_BACKEND_BASE_URL}${image}`}
                         alt="icon"
                         className="w-[140px] h-[140px]"
+                        loading="lazy"
                     />
                 </div>
             </div>
@@ -34,7 +35,7 @@ const Card = ({ name, status, deliveryTime, image }: Card) => {
             )}
 
             <div className="flex">
-                <div className="text-lg">{name}</div>
+                <div className="text-lg leading-relaxed">{name}</div>
                 <a
                     href="#"
                     className="ml-auto text-white bg-green rounded-full w-8 h-8 flex items-center justify-center"

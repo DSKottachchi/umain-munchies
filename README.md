@@ -4,7 +4,6 @@ This project is a simple web application that displays a variety of restaurants.
 
 ## Development Tools
 Code: React.js, TypeScript, Tailwind
-Testing Framework: 
 Version Control: Github 
 Deployment: Vercel
 
@@ -46,4 +45,5 @@ URL: https://umain-munchies-eta.vercel.app
 - [ ] Loading Skeleton
 - [ ] Smoother image loader
 - [ ] Home Page
+- [ ] Update font styling
 - [ ] API hook
